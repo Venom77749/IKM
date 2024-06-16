@@ -1,1 +1,72 @@
+def process_barge_operations():
+    import sys
+
+    try:
+        # Чтение данных
+        print("Введите количество операций (N), количество отсеков (K) и максимальное количество бочек (P) через пробел:")
+        first_line = input().strip()
+        N, K, P = map(int, first_line.split())
+
+        operations = []
+        print(f"Введите {N} операций (например, + 1 1 или - 1 1):")
+        for _ in range(N):
+            operations.append(input().strip())
+        
+        # Проверка корректности ввода
+        if len(operations) != N:
+            print("Error")
+            return
+
+        # Инициализируем структуры данных
+        stacks = [[] for _ in range(K)]
+        current_bottles = 0
+        max_bottles = 0
+
+        for op in operations:
+            parts = op.split()
+            if len(parts) != 3:
+                print("Error")
+                return
+            
+            operation, A, B = parts
+            A = int(A) - 1
+            B = int(B)
+            
+            if operation == '+':
+                if current_bottles + 1 > P:
+                    print("Error")
+                    return
+                if 0 <= A < K:
+                    stacks[A].append(B)
+                    current_bottles += 1
+                    if current_bottles > max_bottles:
+                        max_bottles = current_bottles
+                else:
+                    print("Error")
+                    return
+            elif operation == '-':
+                if 0 <= A < K and stacks[A]:
+                    expected_bottle = stacks[A].pop()
+                    if expected_bottle != B:
+                        print("Error")
+                        return
+                    current_bottles -= 1
+                else:
+                    print("Error")
+                    return
+            else:
+                print("Error")
+                return
+
+        if current_bottles != 0:
+            print("Error")
+        else:
+            print(max_bottles)
+    
+    except Exception as e:
+        print("Error")
+
+# Вызов функции для взаимодействия с пользователем
+if __name__ == "__main__":
+    process_barge_operations()
 
